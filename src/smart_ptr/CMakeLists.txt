@@ -1,10 +1,20 @@
 
-add_library(smart_ptr STATIC)
+add_library(smart_ptr)
 
 target_sources(
   smart_ptr
   PUBLIC
-    unique_ptr.hpp
-  PRIVATE
-    unique_ptr.cpp
+  smart_ptr.hpp
+)
+
+set_target_properties(
+  smart_ptr
+  PROPERTIES
+  LINKER_LANGUAGE CXX
+)
+
+target_include_directories(
+  smart_ptr
+  PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}
 )
