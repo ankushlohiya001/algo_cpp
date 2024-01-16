@@ -14,11 +14,54 @@ public:
   unique_ptr(T *ptr, D del) : data_ptr(ptr), deleter(del) {}
 
   ~unique_ptr() {
-    if (data_ptr != nullptr) {
+    if (data_ptr) {
       // to avoid deleting empty ptr
       deleter(data_ptr);
     }
   }
+
+  // modifiers
+
+  T *release() {
+    // now caller is responsible for its management
+    T *released = data_ptr;
+    data_ptr = nullptr; // releasing reference to data_ptr
+    return released;
+  }
+
+  void reset(T *new_ptr) {
+    // deleting old ptr and replacing with new once
+    if (data_ptr) {
+      deleter(data_ptr);
+    }
+    data_ptr = new_ptr;
+  }
+
+  void swap(unique_ptr &other) {
+    // simple swapping
+    T *old_data_ptr = data_ptr;
+    data_ptr = other.data_ptr;
+    other.data_ptr = old_data_ptr;
+
+    D old_deleter = deleter;
+    deleter = other.deleter;
+    other.deleter = old_deleter;
+  }
+
+  // observers
+  T *get() const { return data_ptr; }
+
+  D get_deleter() const { return deleter; }
+
+  operator bool() const { return data_ptr != nullptr; }
+
+  // object props accessing without `get`
+  T operator*() const { return *data_ptr; }
+
+  T *operator->() const { return data_ptr; }
+
+  // indexed memory accessing
+  T operator[](int v) { return data_ptr[v]; }
 
   void operator=(unique_ptr another) {
     // workaround to avoid copying pointer, which would otherwise

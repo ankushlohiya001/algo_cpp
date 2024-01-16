@@ -2,10 +2,12 @@
 #include <iostream>
 
 struct Test {
-public:
-  Test() { std::cout << "created!!\n"; }
+  int val;
 
-  ~Test() { std::cout << "deleted!!\n"; }
+public:
+  Test(int v) : val(v) { std::cout << "created #" << val << "!!\n"; }
+
+  ~Test() { std::cout << "deleted #" << val << "!!\n"; }
 
   // deleter for Test
   struct Deleter {
@@ -14,14 +16,16 @@ public:
       delete ref;
     }
   };
+
+  void test() { std::cout << "working!!\n"; }
 };
 
 int main() {
+  int *dat = new int[]{3, 4};
+  unique_ptr<int> t1(dat);
   {
-    unique_ptr<Test, Test::Deleter> t1;
     std::cout << "start block\n";
-    t1 = make_unique<Test, Test::Deleter>();
-
+    std::cout << (t1[0]) << "\n";
     std::cout << "end block\n";
   }
   std::cout << "end"
