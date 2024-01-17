@@ -67,7 +67,8 @@ public:
     // workaround to avoid copying pointer, which would otherwise
     // resulted in dual pointer deleting, ie. deleting a ptr which
     // was deleted already
-    data_ptr = another.data_ptr;
+    // also used for reseting behaviour
+    reset(another.data_ptr);
     another.data_ptr = nullptr;
   }
 };
