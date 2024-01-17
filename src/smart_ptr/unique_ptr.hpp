@@ -9,7 +9,7 @@ template <class T, class D = default_deleter<T>> class unique_ptr {
   D deleter;
 
 public:
-  unique_ptr() {}
+  unique_ptr() : data_ptr(nullptr) {}
   unique_ptr(T *ptr) : data_ptr(ptr) {}
   unique_ptr(T *ptr, D del) : data_ptr(ptr), deleter(del) {}
 
