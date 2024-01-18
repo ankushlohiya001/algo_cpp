@@ -24,7 +24,7 @@ target_link_libraries(
   smart_ptr_test
   PRIVATE
     smart_ptr
-    gtest_main
+    # gtest_main
 )
 
 
