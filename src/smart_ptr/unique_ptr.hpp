@@ -65,12 +65,16 @@ public:
 
   void operator=(unique_ptr another) {
     // workaround to avoid copying pointer, which would otherwise
-    // resulted in dual pointer deleting, ie. deleting a ptr which
+    // resulted in double pointer deleting, ie. deleting a ptr which
     // was deleted already
     // also used for reseting behaviour
     reset(another.data_ptr);
     another.data_ptr = nullptr;
   }
+
+  // deleting copy constructor to avoid copying,
+  // which would otherwise resulted in double ptr deleting.
+  unique_ptr(const unique_ptr &) = delete;
 };
 
 template <class T, class... Args> unique_ptr<T> make_unique(Args &&...args) {

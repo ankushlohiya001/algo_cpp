@@ -21,11 +21,12 @@ public:
 };
 
 int main() {
-  int *dat = new int[]{3, 4};
-  unique_ptr<int> t1(dat);
+  unique_ptr<Test> t1(new Test(1));
   {
+    t1 = unique_ptr<Test>(new Test(2));
+    /* unique_ptr<Test> t2 = t1; */
+    /* t1 = t2; */
     std::cout << "start block\n";
-    std::cout << (t1[0]) << "\n";
     std::cout << "end block\n";
   }
   std::cout << "end"
