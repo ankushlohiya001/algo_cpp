@@ -1,5 +1,6 @@
 
 add_subdirectory(smart_ptr)
+add_subdirectory(sorting)
 
 add_library(algo_cpp)
 
@@ -19,6 +20,7 @@ target_link_libraries(
   algo_cpp
   PUBLIC
     smart_ptr
+    sorting
 )
 
 target_include_directories(

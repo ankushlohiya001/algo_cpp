@@ -27,6 +27,22 @@ target_link_libraries(
     # gtest_main
 )
 
+add_executable(
+  sorting_test
+)
+
+target_sources(
+  sorting_test
+  PRIVATE
+  sorting_test.cpp
+)
+
+target_link_libraries(
+  sorting_test
+  PRIVATE
+    sorting
+)
+
 
 add_test(
   NAME smart_ptr_test
