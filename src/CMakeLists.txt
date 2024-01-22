@@ -1,6 +1,7 @@
 
 add_subdirectory(smart_ptr)
 add_subdirectory(sorting)
+add_subdirectory(ads) # abstract data structures
 
 add_library(algo_cpp)
 
