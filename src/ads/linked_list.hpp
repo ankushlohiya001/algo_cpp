@@ -49,6 +49,8 @@ public:
       // and return old_head's data.
       Item<T> *old_head = head;
       head = head->next;
+      // and obviously decreasing count
+      count--;
       return old_head->data;
     }
   }
@@ -64,6 +66,8 @@ public:
       Item<T> *new_tail = new Item<T>{data, nullptr}; // also for this
       tail->next = new_tail;
       tail = new_tail;
+      // and obviously increasing count
+      count++;
     }
   }
 
@@ -79,6 +83,8 @@ public:
       // element previous to tail, obvious ;)
       Item<T> *old_tail = tail;
       head = tail = nullptr;
+      // and obviously decreasing count
+      count--;
       return old_tail->data;
     } else {
       // since its' single linked list, we dont've previous
@@ -91,6 +97,8 @@ public:
       Item<T> *old_tail = tail;
       root->next = nullptr;
       tail = root;
+      // and obviously decreasing count
+      count--;
       return old_tail->data;
     }
   }
