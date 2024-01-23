@@ -1,16 +1,13 @@
-#include "linked_list.hpp"
+#include "stack.hpp"
 #include <iostream>
 
 int main() {
-  SLList<int> l1;
-  l1.insert_back(34);
-  l1.insert_back(37);
-  l1.insert_back(32);
-  l1.insert_back(38);
 
-  /* while (!l1.is_empty()) { */
-  /*   std::cout << l1.remove_back() << std::endl; */
-  /* } */
-  std::cout << l1.size() << std::endl;
+  Stack<int> t1;
+  t1.push(34);
+  t1.push(37);
+  while (!t1.is_empty()) {
+    std::cout << t1.pop() << std::endl;
+  }
   return 0;
 }
