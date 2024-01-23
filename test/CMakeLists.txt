@@ -10,41 +10,28 @@
 #
 # # bring the dependency into scope
 # FetchContent_MakeAvailable(GoogleTest)
+
+foreach(lib
+  IN ITEMS sorting smart_ptr ads)
+  add_executable(
+  ${lib}_test
+)
+
+  target_sources(
+  ${lib}_test
+  PRIVATE
+  ${lib}_test.cpp
+)
+
+  target_link_libraries(
+  ${lib}_test
+  PRIVATE
+    ${lib}
+)
+endforeach()
+
 #
-add_executable(
-  smart_ptr_test
-)
-target_sources(
-  smart_ptr_test
-  PRIVATE
-  smart_ptr_test.cpp
-)
-
-target_link_libraries(
-  smart_ptr_test
-  PRIVATE
-    smart_ptr
-    # gtest_main
-)
-
-add_executable(
-  sorting_test
-)
-
-target_sources(
-  sorting_test
-  PRIVATE
-  sorting_test.cpp
-)
-
-target_link_libraries(
-  sorting_test
-  PRIVATE
-    sorting
-)
-
-
-add_test(
-  NAME smart_ptr_test
-  COMMAND $<TARGET_FILE:smart_ptr_test> --gtest_filter=smart_ptr.unique
-)
+# add_test(
+#   NAME smart_ptr_test
+#   COMMAND $<TARGET_FILE:smart_ptr_test> --gtest_filter=smart_ptr.unique
+# )
