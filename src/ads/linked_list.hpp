@@ -24,6 +24,8 @@ public:
     return head == nullptr;
   }
 
+  T &front() const { return head->data; }
+
   void insert_front(T data) {
     // it's as simple as following
     // create a new item(with given data)
@@ -54,6 +56,8 @@ public:
       return old_head->data;
     }
   }
+
+  T &back() const { return tail->data; }
 
   void insert_back(T data) {
     if (is_empty()) {

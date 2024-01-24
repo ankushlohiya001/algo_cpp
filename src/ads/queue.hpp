@@ -16,6 +16,8 @@ public:
 
   bool is_empty() { return internal->is_empty(); }
 
+  T &peek() const { return internal->front(); }
+
   // since for single linked_list:
   // removing from last required n iterations.
   // but we've cheaper alternative

@@ -16,6 +16,10 @@ public:
 
   bool is_empty() { return internal->is_empty(); }
 
+  T &peek() const {
+    return internal->front(); // since we'll be pushing front
+  }
+
   // using inserting front, because removing from front
   // is cheaper than removing from back,
   // (remember we need to move to prev item of tail)
