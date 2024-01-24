@@ -12,7 +12,7 @@
 # FetchContent_MakeAvailable(GoogleTest)
 
 foreach(lib
-  IN ITEMS sorting smart_ptr ads)
+  IN ${modules})
   add_executable(
   ${lib}_test
 )

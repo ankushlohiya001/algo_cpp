@@ -1,7 +1,9 @@
 
-add_subdirectory(smart_ptr)
-add_subdirectory(sorting)
-add_subdirectory(ads) # abstract data structures
+
+foreach(
+  dir IN ${modules})
+  add_subdirectory(${dir})
+endforeach()
 
 add_library(algo_cpp)
 
