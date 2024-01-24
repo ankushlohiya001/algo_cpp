@@ -1,6 +1,13 @@
 #pragma once
 #include "linked_list.hpp"
 
+/*
+ * stack works on LIFO / FILO
+ * means removing and inserting will be from same side.
+ * of a list.
+ * ie. a->b->c
+ * here c was added last, so it'll be remove first
+ * */
 template <class T> class Stack {
   SLList<T> *internal;
 
