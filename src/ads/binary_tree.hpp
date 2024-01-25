@@ -79,4 +79,37 @@ public:
       return root->remove(new Node<T>(data));
     }
   }
+
+  template <class FN> static void in_order(Node<T> *node, FN *fn) {
+    if (node->left != nullptr) {
+      BSTree::in_order(node->left, fn);
+    }
+    (*fn)(node->data);
+    if (node->right != nullptr) {
+      BSTree::in_order(node->right, fn);
+    }
+  }
+  template <class FN> void in_order(FN *fn) { BSTree::in_order(root, fn); }
+
+  template <class FN> static void pre_order(Node<T> *node, FN *fn) {
+    (*fn)(node->data);
+    if (node->left != nullptr) {
+      BSTree::pre_order(node->left, fn);
+    }
+    if (node->right != nullptr) {
+      BSTree::pre_order(node->right, fn);
+    }
+  }
+  template <class FN> void pre_order(FN *fn) { BSTree::pre_order(root, fn); }
+
+  template <class FN> static void post_order(Node<T> *node, FN *fn) {
+    if (node->left != nullptr) {
+      BSTree::post_order(node->left, fn);
+    }
+    if (node->right != nullptr) {
+      BSTree::post_order(node->right, fn);
+    }
+    (*fn)(node->data);
+  }
+  template <class FN> void post_order(FN *fn) { BSTree::post_order(root, fn); }
 };
