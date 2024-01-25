@@ -7,6 +7,7 @@ int main() {
   t1.insert(37);
   t1.insert(34);
   t1.insert(38);
-  std::cout << t1.root->right->data << std::endl;
+  t1.remove(34);
+  std::cout << t1.root->left << std::endl;
   return 0;
 }

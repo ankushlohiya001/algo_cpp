@@ -21,6 +21,31 @@ public:
       (*dir)->insert(node);
     }
   }
+
+  bool remove(Node *node) {
+    Node<T> **target;
+    if (node->data < data) {
+      target = &left;
+    } else {
+      target = &right;
+    }
+
+    if (*target == nullptr) {
+      return false;
+    } else if ((*target)->data == node->data) {
+      Node *left = (*target)->left;
+      *target = (*target)->right;
+      if (*target == nullptr) {
+        *target = left;
+        left = nullptr;
+      } else {
+        (*target)->insert(left);
+      }
+      return true;
+    } else {
+      return (*target)->remove(node);
+    }
+  }
 };
 
 template <class T> struct BSTree {
@@ -38,5 +63,20 @@ public:
     }
   }
 
-  T remove() {}
+  bool remove(T data) {
+    if (root == nullptr) {
+      return false;
+    } else if (root->data == data) {
+      Node<T> *right = root->right;
+      root = root->left;
+      if (root == nullptr) {
+        root = right;
+      } else {
+        root->insert(right);
+      }
+      return true;
+    } else {
+      return root->remove(new Node<T>(data));
+    }
+  }
 };
