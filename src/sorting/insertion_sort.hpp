@@ -1,4 +1,5 @@
 #pragma once
+#include "binary.hpp"
 #include <utility>
 
 /*
@@ -20,5 +21,19 @@ template <class T> void insertion_sort(T *arr, long length) {
       std::swap(arr[crnt], arr[crnt - 1]);
       crnt--;
     }
+  }
+}
+
+template <class T> void binary_insertion_sort(T *arr, long length) {
+  for (long i = 1; i < length; i++) {
+    T crnt = arr[i];
+    int pos = sorted_position(arr, crnt, i);
+    if (pos == i) {
+      continue;
+    }
+    for (long j = i; j > pos; j--) {
+      arr[j] = arr[j - 1];
+    }
+    arr[pos] = crnt;
   }
 }
