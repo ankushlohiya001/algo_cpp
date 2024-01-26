@@ -12,7 +12,7 @@
 # FetchContent_MakeAvailable(GoogleTest)
 
 foreach(lib
-  IN ${modules})
+  IN ITEMS ${modules})
   add_executable(
   ${lib}_test
 )
@@ -26,7 +26,7 @@ foreach(lib
   target_link_libraries(
   ${lib}_test
   PRIVATE
-    ${lib}
+  ${modules}
 )
 endforeach()
 

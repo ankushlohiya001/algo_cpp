@@ -1,7 +1,7 @@
 
 
 foreach(
-  dir IN ${modules})
+  dir IN ITEMS ${modules})
   add_subdirectory(${dir})
 endforeach()
 
