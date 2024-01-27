@@ -11,6 +11,7 @@
 # # bring the dependency into scope
 # FetchContent_MakeAvailable(GoogleTest)
 
+# we need to make each test's executable, so :)
 foreach(lib
   IN ITEMS ${modules})
   add_executable(
@@ -23,6 +24,8 @@ foreach(lib
   ${lib}_test.cpp
 )
 
+  # linking all modules, so that we can use library to every
+  # all modules tests
   target_link_libraries(
   ${lib}_test
   PRIVATE
