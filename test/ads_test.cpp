@@ -1,5 +1,6 @@
-#include "binary_tree.hpp"
+#include "heap.hpp"
 #include <iostream>
+#include <vector>
 
 template <class T> class Print {
 public:
@@ -7,17 +8,20 @@ public:
 };
 
 int main() {
-  BSTree<int> t1;
-  t1.insert(37);
-  t1.insert(34);
-  t1.insert(38);
-  t1.insert(24);
-  t1.insert(14);
-  t1.insert(57);
-  t1.in_order(new Print<int>);
   std::cout << "-----------------" << std::endl;
-  t1.pre_order(new Print<int>);
+
+  Heap<int, std::vector<int>> *hp = new MinHeap<int>();
+
+  hp->insert(34);
+  hp->insert(32);
+  hp->insert(37);
+  hp->insert(51);
+  hp->insert(24);
+
+  for (int i = 0; i < 5; i++) {
+    std::cout << hp->store->at(i) << std::endl;
+  }
+
   std::cout << "-----------------" << std::endl;
-  t1.post_order(new Print<int>);
   return 0;
 }
