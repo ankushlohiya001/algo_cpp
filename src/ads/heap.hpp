@@ -4,8 +4,9 @@
 
 template <class T, class ST> class Heap {
 protected:
-public:
   ST *store;
+
+public:
   Heap() : store(new ST) {}
 
   virtual void insert_at_last(T data) = 0;
@@ -13,12 +14,25 @@ public:
   void insert(T data) {
     insert_at_last(data);
     // now move this value up to its' correct position
-    move_up(store->size() - 1);
+    move_up(len() - 1);
   }
 
-  virtual T &top() { return (*store)[0]; };
+  T remove_top() {
+    T top = at(0);
+    int ln = len();
+    std::swap(at(0), at(ln - 1));
+    remove_first();
+    move_down(0);
+    return top;
+  }
 
-  virtual T remove() = 0;
+  virtual int len() = 0;
+
+  virtual T &at(int index) = 0;
+
+  virtual T &top() { return at(0); };
+
+  virtual T remove_first() = 0;
 
   inline static int parent_index(int child) {
     return (child + (child & 1)) / 2 - 1;
@@ -26,12 +40,12 @@ public:
 
   virtual bool is_parent(int parent_idx, int child_idx) = 0;
 
-  virtual void move_up(int index) {
+  void move_up(int index) {
     int child_idx = index;
     while (child_idx > 0) {
       int parent_idx = parent_index(child_idx);
       if (!is_parent(parent_idx, child_idx)) {
-        std::swap(store->at(parent_idx), store->at(child_idx));
+        std::swap(at(parent_idx), at(child_idx));
         child_idx = parent_idx;
       } else {
         break;
@@ -42,9 +56,13 @@ public:
 
 template <class T> class MinHeap : public Heap<T, std::vector<T>> {
 public:
-  bool is_parent(int parent_idx, int child_idx) {
+  T &at(int index) {
     std::vector<T> *store = this->store;
-    return store->at(parent_idx) < store->at(child_idx);
+    return store->at(index);
+  }
+
+  bool is_parent(int parent_idx, int child_idx) {
+    return at(parent_idx) < at(child_idx);
   }
 
   void insert_at_last(T data) {
@@ -52,14 +70,8 @@ public:
     store->push_back(data);
   }
 
-  T remove() {
+  void remove_last() {
     std::vector<T> *store = this->store;
-    T top = store->at(0);
-    /// will just swap first and last
-    store[0] = store[store->size() - 1];
-    // then removing last
     store->pop_back();
-    // now we need to move new top element down to its' correct position
-    return top;
   }
 };
