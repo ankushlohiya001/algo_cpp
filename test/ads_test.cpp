@@ -19,7 +19,7 @@ int main() {
   hp->insert(24);
 
   for (int i = 0; i < 5; i++) {
-    std::cout << hp->store->at(i) << std::endl;
+    std::cout << hp->at(i) << std::endl;
   }
 
   std::cout << "-----------------" << std::endl;

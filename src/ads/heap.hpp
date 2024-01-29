@@ -18,12 +18,12 @@ public:
   }
 
   T remove_top() {
-    T top = at(0);
+    T *top = at(0);
     int ln = len();
     std::swap(at(0), at(ln - 1));
     remove_first();
     move_down(0);
-    return top;
+    return *top;
   }
 
   virtual int len() = 0;
@@ -32,7 +32,7 @@ public:
 
   virtual T &top() { return at(0); };
 
-  virtual T remove_first() = 0;
+  virtual void remove_first() = 0;
 
   inline static int parent_index(int child) {
     return (child + (child & 1)) / 2 - 1;
@@ -52,6 +52,36 @@ public:
       }
     }
   }
+
+  void move_down(int index) {
+    int crnt_idx = index;
+    while (true) {
+      int a_idx = crnt_idx * 2 + 1; // left child index
+      if (a_idx >= len())
+        break;
+      int b_idx = crnt_idx * 2 + 2; // right child index
+
+      if (b_idx >= len()) {
+        b_idx = a_idx;
+      }
+      int rare = crnt_idx;
+
+      if (is_parent(a_idx, rare)) {
+        rare = a_idx;
+      }
+
+      if (is_parent(b_idx, rare)) {
+        rare = b_idx;
+      }
+
+      if (rare == crnt_idx) {
+        break;
+      } else {
+        std::swap(at(rare), at(crnt_idx));
+        crnt_idx = rare;
+      }
+    }
+  }
 };
 
 template <class T> class MinHeap : public Heap<T, std::vector<T>> {
@@ -59,6 +89,11 @@ public:
   T &at(int index) {
     std::vector<T> *store = this->store;
     return store->at(index);
+  }
+
+  int len() {
+    std::vector<T> *store = this->store;
+    return store->size();
   }
 
   bool is_parent(int parent_idx, int child_idx) {
@@ -70,7 +105,7 @@ public:
     store->push_back(data);
   }
 
-  void remove_last() {
+  void remove_first() {
     std::vector<T> *store = this->store;
     store->pop_back();
   }
