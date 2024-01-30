@@ -2,6 +2,12 @@
 #include <utility>
 #include <vector>
 
+template <class T> void swap(T &ref_a, T &ref_b) {
+  T tmp = ref_a;
+  ref_a = ref_b;
+  ref_b = tmp;
+}
+
 template <class T, class ST> class Heap {
 protected:
   ST *store;
@@ -45,7 +51,7 @@ public:
     while (child_idx > 0) {
       int parent_idx = parent_index(child_idx);
       if (!is_parent(parent_idx, child_idx)) {
-        std::swap(at(parent_idx), at(child_idx));
+        swap(at(parent_idx), at(child_idx));
         child_idx = parent_idx;
       } else {
         break;
@@ -77,7 +83,7 @@ public:
       if (rare == crnt_idx) {
         break;
       } else {
-        std::swap(at(rare), at(crnt_idx));
+        swap(at(rare), at(crnt_idx));
         crnt_idx = rare;
       }
     }
