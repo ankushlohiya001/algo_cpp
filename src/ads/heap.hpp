@@ -1,5 +1,4 @@
 #pragma once
-#include <utility>
 #include <vector>
 
 template <class T> void swap(T &ref_a, T &ref_b) {
@@ -24,15 +23,17 @@ public:
   }
 
   T remove_top() {
-    T *top = at(0);
+    T top = at(0);
     int ln = len();
-    std::swap(at(0), at(ln - 1));
+    swap(at(0), at(ln - 1));
     remove_first();
     move_down(0);
-    return *top;
+    return top;
   }
 
   virtual int len() = 0;
+
+  bool is_empty() { return len() == 0; }
 
   virtual T &at(int index) = 0;
 
@@ -91,28 +92,20 @@ public:
 };
 
 template <class T> class MinHeap : public Heap<T, std::vector<T>> {
-public:
-  T &at(int index) {
-    std::vector<T> *store = this->store;
-    return store->at(index);
-  }
+private:
+  std::vector<T> *store;
 
-  int len() {
-    std::vector<T> *store = this->store;
-    return store->size();
-  }
+public:
+  MinHeap() : store(new std::vector<T>) {}
+  T &at(int index) { return store->at(index); }
+
+  int len() { return store->size(); }
 
   bool is_parent(int parent_idx, int child_idx) {
     return at(parent_idx) < at(child_idx);
   }
 
-  void insert_at_last(T data) {
-    std::vector<T> *store = this->store;
-    store->push_back(data);
-  }
+  void insert_at_last(T data) { store->push_back(data); }
 
-  void remove_first() {
-    std::vector<T> *store = this->store;
-    store->pop_back();
-  }
+  void remove_first() { store->pop_back(); }
 };

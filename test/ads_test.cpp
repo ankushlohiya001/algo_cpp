@@ -18,8 +18,8 @@ int main() {
   hp->insert(51);
   hp->insert(24);
 
-  for (int i = 0; i < 5; i++) {
-    std::cout << hp->at(i) << std::endl;
+  while (!hp->is_empty()) {
+    std::cout << hp->remove_top() << std::endl;
   }
 
   std::cout << "-----------------" << std::endl;
