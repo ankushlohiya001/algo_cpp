@@ -1,5 +1,7 @@
 #pragma once
+#include "heap.hpp"
 #include "linked_list.hpp"
+#include <vector>
 
 /*
  * simple Queue works on FIFO / LILO
@@ -26,4 +28,22 @@ public:
   void enque(T data) { internal->insert_back(data); }
 
   T deque() { return internal->remove_front(); }
+};
+
+// priority queue using heap
+template <class T> class PQueue : public Heap<T, std::vector<T>> {
+private:
+  std::vector<T> *store;
+  T &at(int index) { return store->at(index); }
+  bool is_parent(int parent_idx, int child_idx) {
+    return at(parent_idx) < at(child_idx);
+  }
+
+  void insert_at_last(T data) { store->push_back(data); }
+
+  void remove_first() { store->pop_back(); }
+
+public:
+  PQueue() : store(new std::vector<T>) {}
+  int len() { return store->size(); }
 };
