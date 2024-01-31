@@ -30,20 +30,32 @@ public:
   T deque() { return internal->remove_front(); }
 };
 
+template <class T> struct PItem {
+  T data;
+  int priority;
+};
+
 // priority queue using heap
-template <class T> class PQueue : public Heap<T, std::vector<T>> {
+template <class T>
+class PQueue : private Heap<PItem<T>, std::vector<PItem<T>>> {
 private:
-  std::vector<T> *store;
-  T &at(int index) { return store->at(index); }
+  std::vector<PItem<T>> *store;
+  PItem<T> &at(int index) { return store->at(index); }
   bool is_parent(int parent_idx, int child_idx) {
-    return at(parent_idx) < at(child_idx);
+    return at(parent_idx).priority < at(child_idx).priority;
   }
 
-  void insert_at_last(T data) { store->push_back(data); }
+  void insert_at_last(PItem<T> data) { store->push_back(data); }
 
   void remove_first() { store->pop_back(); }
 
 public:
-  PQueue() : store(new std::vector<T>) {}
+  PQueue() : store(new std::vector<PItem<T>>) {}
   int len() { return store->size(); }
+
+  T &peek() { return this->top().data; }
+
+  void enque(T data, int priority) { this->insert(PItem<T>{data, priority}); }
+
+  T deque() { return this->remove_top().data; }
 };

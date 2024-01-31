@@ -1,4 +1,4 @@
-#include "heap.hpp"
+#include "queue.hpp"
 #include <iostream>
 #include <vector>
 
@@ -10,18 +10,13 @@ public:
 int main() {
   std::cout << "-----------------" << std::endl;
 
-  MinHeap<int> *hp = new MinHeap<int>();
+  PQueue<int> *hp = new PQueue<int>();
 
-  hp->insert(34);
-  hp->insert(32);
-  hp->insert(51);
-  hp->insert(37);
-  hp->insert(24);
+  hp->enque(34, 10);
+  hp->enque(37, 1);
+  hp->enque(24, 3);
 
-  while (!hp->is_empty()) {
-    std::cout << hp->remove_top() << std::endl;
-  }
-
+  std::cout << hp->peek() << std::endl;
   std::cout << "-----------------" << std::endl;
   return 0;
 }
