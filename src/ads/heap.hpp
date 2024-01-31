@@ -11,29 +11,7 @@ template <class T, class ST> class Heap {
 protected:
   ST *store;
 
-public:
-  Heap() : store(new ST) {}
-
   virtual void insert_at_last(T data) = 0;
-
-  void insert(T data) {
-    insert_at_last(data);
-    // now move this value up to its' correct position
-    move_up(len() - 1);
-  }
-
-  T remove_top() {
-    T top = at(0);
-    int ln = len();
-    swap(at(0), at(ln - 1));
-    remove_first();
-    move_down(0);
-    return top;
-  }
-
-  virtual int len() = 0;
-
-  bool is_empty() { return len() == 0; }
 
   virtual T &at(int index) = 0;
 
@@ -89,17 +67,35 @@ public:
       }
     }
   }
+
+public:
+  Heap() : store(new ST) {}
+
+  void insert(T data) {
+    insert_at_last(data);
+    // now move this value up to its' correct position
+    move_up(len() - 1);
+  }
+
+  T remove_top() {
+    T top = at(0);
+    int ln = len();
+    swap(at(0), at(ln - 1));
+    remove_first();
+    move_down(0);
+    return top;
+  }
+
+  virtual int len() = 0;
+
+  bool is_empty() { return len() == 0; }
 };
 
 template <class T> class MinHeap : public Heap<T, std::vector<T>> {
-private:
+protected:
   std::vector<T> *store;
 
-public:
-  MinHeap() : store(new std::vector<T>) {}
   T &at(int index) { return store->at(index); }
-
-  int len() { return store->size(); }
 
   bool is_parent(int parent_idx, int child_idx) {
     return at(parent_idx) < at(child_idx);
@@ -108,4 +104,16 @@ public:
   void insert_at_last(T data) { store->push_back(data); }
 
   void remove_first() { store->pop_back(); }
+
+public:
+  MinHeap() : store(new std::vector<T>) {}
+
+  int len() { return store->size(); }
+};
+
+template <class T> class MaxHeap : public MinHeap<T> {
+protected:
+  bool is_parent(int parent_idx, int child_idx) {
+    return this->at(parent_idx) > this->at(child_idx);
+  }
 };

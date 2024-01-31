@@ -10,12 +10,12 @@ public:
 int main() {
   std::cout << "-----------------" << std::endl;
 
-  Heap<int, std::vector<int>> *hp = new MinHeap<int>();
+  MinHeap<int> *hp = new MinHeap<int>();
 
   hp->insert(34);
   hp->insert(32);
-  hp->insert(37);
   hp->insert(51);
+  hp->insert(37);
   hp->insert(24);
 
   while (!hp->is_empty()) {
