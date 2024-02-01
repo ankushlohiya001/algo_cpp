@@ -7,24 +7,50 @@ template <class T> void swap(T &ref_a, T &ref_b) {
   ref_b = tmp;
 }
 
+/*
+ * Heap's abstract class
+ * Currently limited to binary Heap.
+ * Will switch to k-ary Heap, Soon :)
+ * */
 template <class T, class ST> class Heap {
 protected:
-  ST *store;
+  ST *store; // structure which manage indexed storage
 
+  // to add new elements in store, it's just to add
+  // element at one end of `store`,
+  // movement is not managed by this fun.
   virtual void insert_at_last(T data) = 0;
 
+  // function to specify how to access store's element,
+  // ie. store[index], as it might not be possible for every
+  // DS.
   virtual T &at(int index) = 0;
 
+  // to access top element of heap,
+  // either Min / Max (depends on data item)
   virtual T &top() { return at(0); };
 
+  // similar to `insert_at_last`, but it's used to remove
+  // element from `store`.
   virtual void remove_first() = 0;
 
+  // to calcuate parent of any child node in heap
+  // calculated mathematically :D
   inline static int parent_index(int child) {
     return (child + (child & 1)) / 2 - 1;
   }
 
+  // function which decide the order of element,
+  // or is used to find which pair of elements need to swap,
+  // if this condition is not met, :)
   virtual bool is_parent(int parent_idx, int child_idx) = 0;
 
+  // when an element is inserted at end (bottom of heap) of store,
+  // then it need to move up, by following Heap's rule,
+  // ie. is_parent,
+  //
+  // But due to reusabiltiy purposes, this function can also
+  // able to move any index's element.
   void move_up(int index) {
     int child_idx = index;
     while (child_idx > 0) {
@@ -38,6 +64,18 @@ protected:
     }
   }
 
+  // since removing an element for index based stores,
+  // is not fast for either end,(usually front).
+  //
+  // so this function works by first swapping front to last,
+  // and remove from last(usually fast)
+  // and then moving down the newly front, since it's not it's
+  // not it's correct position.
+  //
+  // compare to move up, move_down required more complex mech,
+  // ie, need to decide for which child to swap with,
+  //
+  // performance is decreased directly for k-ary Heap.
   void move_down(int index) {
     int crnt_idx = index;
     while (true) {
