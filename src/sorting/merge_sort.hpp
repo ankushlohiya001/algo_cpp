@@ -60,8 +60,8 @@ template <class T> void divider_merger(T *arr, int from, int to) {
     return;
   } else if (len == 2) {
     // sort two numbers,
-    if (arr[from] > arr[to]) {
-      swap(arr[from], arr[to]);
+    if (arr[from] > arr[from + 1]) {
+      swap(arr[from], arr[from + 1]);
     }
   } else {
 
@@ -69,8 +69,8 @@ template <class T> void divider_merger(T *arr, int from, int to) {
     int mid = from + len / 2;
     divider_merger(arr, from, mid); // first half
 
-    divider_merger(arr, mid, len); // second half
+    divider_merger(arr, mid, to); // second half
 
-    merge(arr, from, len);
+    merge(arr, from, to);
   }
 }
