@@ -108,6 +108,8 @@ public:
   }
 };
 
+// just ported code, need to rewrite with proper abstract class
+// for linked list so that reduction in methods :)
 template <class T> struct DItem {
   T data;      // data it contains
   DItem *prev; // reference to prev item
