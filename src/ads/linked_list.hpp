@@ -69,3 +69,32 @@ public:
     }
   }
 };
+
+template <class T> struct SItem {
+  T data;
+  SItem *next;
+};
+
+template <class T> class SLList : private LinkedList<T, SItem<T>> {
+  SItem<T> *head;
+  SItem<T> *tail;
+
+  SItem<T> *item_at(int index) {
+    int len = this->size();
+    SItem<T> *ref = nullptr;
+    int i = 0;
+    while (ref != nullptr && i < len) {
+      if (i == index) {
+        break;
+      } else {
+        ref = ref->next;
+        i++;
+      }
+    }
+    return ref;
+  }
+
+  void insert_item_at(int index, SItem<T> *item) {}
+
+  SItem<T> *remove_item_from(int index) {}
+};
