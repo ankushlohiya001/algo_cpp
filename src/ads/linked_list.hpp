@@ -6,7 +6,7 @@ template <class T> struct Item {
   Item *next; // reference to next item
 };
 
-template <class T> class SLList {
+template <class T> class LinkedList {
   // single linked list, having ref to next
   // element only
   Item<T> *head; // starting point
@@ -15,7 +15,7 @@ template <class T> class SLList {
   long count;
 
 public:
-  SLList() : head(nullptr), tail(nullptr), count(0) {}
+  LinkedList() : head(nullptr), tail(nullptr), count(0) {}
 
   long size() { return count; }
 
