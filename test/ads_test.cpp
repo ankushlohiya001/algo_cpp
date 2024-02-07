@@ -1,22 +1,18 @@
-#include "queue.hpp"
+#include "linked_list.hpp"
 #include <iostream>
 #include <vector>
 
-template <class T> class Print {
-public:
-  void operator()(T data) { std::cout << data << std::endl; }
-};
-
 int main() {
   std::cout << "-----------------" << std::endl;
+  LinkedList<int, SItem<int>> *sl = new SLList<int>();
+  SLList<int> *ls = static_cast<SLList<int> *>(sl);
+  ls->insert_item_at(0, new SItem<int>(34));
+  ls->insert_item_at(1, new SItem<int>(37));
+  std::cout << ls->head->next->data << std::endl;
 
-  PQueue<int> *hp = new PQueue<int>();
-
-  hp->enque(34, 10);
-  hp->enque(37, 1);
-  hp->enque(24, 3);
-
-  std::cout << hp->peek() << std::endl;
+  /* while (!sl->is_empty()) { */
+  /*   std::cout << sl->remove_front() << ", "; */
+  /* } */
   std::cout << "-----------------" << std::endl;
   return 0;
 }

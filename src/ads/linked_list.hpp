@@ -29,7 +29,10 @@ public:
     return size() == 0;
   }
 
-  T &front() const { return item_at(0)->get_data(); }
+  const T &front() const {
+    IT *arr = this->item_at(0);
+    return nullptr;
+  }
 
   void insert_front(T data) {
     IT *item = new IT(data);
@@ -73,9 +76,12 @@ public:
 template <class T> struct SItem {
   T data;
   SItem *next;
+  SItem(T dat) : data(dat), next(nullptr) {}
+  T get_data() { return data; }
 };
 
-template <class T> class SLList : private LinkedList<T, SItem<T>> {
+template <class T> class SLList : public LinkedList<T, SItem<T>> {
+public:
   SItem<T> *head;
   SItem<T> *tail;
 
@@ -94,7 +100,23 @@ template <class T> class SLList : private LinkedList<T, SItem<T>> {
     return ref;
   }
 
-  void insert_item_at(int index, SItem<T> *item) {}
+  void insert_item_at(int index, SItem<T> *item) {
+    if (head == nullptr) {
+      head = tail = item;
+    } else {
+      SItem<T> **target = &head;
+      for (int i = 0; (*target != nullptr) && i < index; i++) {
+        target = &((*target)->next);
+      }
+      if (*target != nullptr) {
+        item->next = *target;
+      }
+      *target = item;
+    }
+  }
 
   SItem<T> *remove_item_from(int index) {}
+
+public:
+  SLList() : head(nullptr), tail(nullptr) {}
 };
