@@ -4,8 +4,8 @@
 
 int main() {
   std::cout << "-----------------" << std::endl;
-  LinkedList<char, SItem<char>> *sl = new SLList<char>();
-  SLList<char> *ls = static_cast<SLList<char> *>(sl);
+  LinkedList<char, DItem<char>> *sl = new DLList<char>();
+  /* SLList<char> *ls = static_cast<SLList<char> *>(sl); */
   // a->b->e->c->d
   sl->insert_back('e');
   sl->insert_back('c');

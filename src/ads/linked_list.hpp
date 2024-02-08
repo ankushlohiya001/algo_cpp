@@ -148,3 +148,82 @@ public:
 public:
   SLList() : head(nullptr), tail(nullptr) {}
 };
+
+/*---------------------------------------
+ * doubly linked list
+ * */
+template <class T> struct DItem {
+  T data;
+  DItem *prev;
+  DItem *next;
+  DItem(T dat) : data(dat), prev(nullptr), next(nullptr) {}
+  T get_data() { return data; }
+};
+
+template <class T> class DLList : public LinkedList<T, DItem<T>> {
+public:
+  DItem<T> *head;
+  DItem<T> *tail;
+
+  DItem<T> *item_at(int index) {
+    int len = this->size();
+    DItem<T> *ref = head;
+    int i = 0;
+    while (ref != nullptr && i < len) {
+      if (i == index) {
+        break;
+      } else {
+        ref = ref->next;
+        i++;
+      }
+    }
+    return ref;
+  }
+
+  void insert_item_at(int index, DItem<T> *item) {
+    if (head == nullptr) {
+      head = tail = item;
+    } else if (index >= this->size()) {
+      tail->next = item;
+      item->prev = tail;
+      tail = item;
+    } else {
+      DItem<T> **target = &head;
+      for (int i = 0; (*target != nullptr) && i < index; i++) {
+        target = &((*target)->next);
+      }
+      if (*target != nullptr) {
+        item->next = *target;
+        item->prev = (*target)->prev;
+        (*target)->prev = item;
+      }
+      *target = item;
+    }
+  }
+
+  /* a->b->c->d */
+
+  DItem<T> *remove_item_from(int index) {
+    if (head == nullptr) {
+      return nullptr;
+    } else if (index == 0) {
+      DItem<T> *old = head;
+      head = old->next;
+      return old;
+    } else {
+      DItem<T> **target = &head;
+      for (int i = 0; (*target != nullptr) && i < index; i++) {
+        target = &((*target)->next);
+      }
+
+      DItem<T> *crnt = *target;
+      if (crnt != nullptr) {
+        *target = crnt->next;
+      }
+      return crnt;
+    }
+  }
+
+public:
+  DLList() : head(nullptr), tail(nullptr) {}
+};
