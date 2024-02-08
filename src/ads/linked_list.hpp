@@ -29,9 +29,9 @@ public:
     return size() == 0;
   }
 
-  const T &front() const {
-    IT *arr = this->item_at(0);
-    return nullptr;
+  T front() {
+    IT *item = item_at(0);
+    return item->get_data();
   }
 
   void insert_front(T data) {
@@ -53,7 +53,10 @@ public:
     }
   }
 
-  T &back() const { return item_at(size() - 1)->get_data(); }
+  T back() {
+    IT *item = item_at(size() - 1);
+    return item->get_data();
+  }
 
   void insert_back(T data) {
     IT *item = new IT(data);
@@ -88,7 +91,7 @@ public:
 
   SItem<T> *item_at(int index) {
     int len = this->size();
-    SItem<T> *ref = nullptr;
+    SItem<T> *ref = head;
     int i = 0;
     while (ref != nullptr && i < len) {
       if (i == index) {
