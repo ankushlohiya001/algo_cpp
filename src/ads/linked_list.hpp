@@ -56,7 +56,8 @@ public:
   T &back() const { return item_at(size() - 1)->get_data(); }
 
   void insert_back(T data) {
-    insert_item_at(size(), data);
+    IT *item = new IT(data);
+    insert_item_at(this->size(), item);
     count++;
   }
 
@@ -103,6 +104,9 @@ public:
   void insert_item_at(int index, SItem<T> *item) {
     if (head == nullptr) {
       head = tail = item;
+    } else if (index >= this->size()) {
+      tail->next = item;
+      tail = item;
     } else {
       SItem<T> **target = &head;
       for (int i = 0; (*target != nullptr) && i < index; i++) {
@@ -115,7 +119,28 @@ public:
     }
   }
 
-  SItem<T> *remove_item_from(int index) {}
+  /* a->b->c->d */
+
+  SItem<T> *remove_item_from(int index) {
+    if (head == nullptr) {
+      return nullptr;
+    } else if (index == 0) {
+      SItem<T> *old = head;
+      head = old->next;
+      return old;
+    } else {
+      SItem<T> **target = &head;
+      for (int i = 0; (*target != nullptr) && i < index; i++) {
+        target = &((*target)->next);
+      }
+
+      SItem<T> *crnt = *target;
+      if (crnt != nullptr) {
+        *target = crnt->next;
+      }
+      return crnt;
+    }
+  }
 
 public:
   SLList() : head(nullptr), tail(nullptr) {}
