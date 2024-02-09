@@ -133,10 +133,13 @@ public:
   // else we would need to travel upto tail item.
   SItem<T> *tail;
 
-  // TODOs
-  // [] make last element accessing faster,
   SItem<T> *item_at(int index) {
     int len = this->size();
+    if (index == len - 1) {
+      // since we've last element/ tail reference,
+      // no need to travel
+      return tail;
+    }
     SItem<T> *ref = head;
     int i = 0;
     while (ref != nullptr && i < len) {
@@ -157,7 +160,7 @@ public:
       head = tail = item;
     } else if (index >= this->size()) {
       // TODOs
-      // need to reconsider :)
+      // need to reconsider whether panic or let it as is. :)
       //  appending to last in case of element is larger than
       //  length of list.
       tail->next = item;
@@ -221,19 +224,34 @@ template <class T> struct DItem {
 };
 
 template <class T> class DLList : public LinkedList<T, DItem<T>> {
+
+  bool decide_dir(int index, int *new_index) {
+    int len = this->size();
+    int inv_index = len - index - 1;
+
+    bool from_head = index < inv_index;
+
+    *new_index = from_head ? index : inv_index;
+
+    return from_head;
+  }
+
 public:
   DItem<T> *head;
   DItem<T> *tail;
 
   DItem<T> *item_at(int index) {
     int len = this->size();
-    DItem<T> *ref = head;
+    int *new_index;
+    bool from_head = decide_dir(index, new_index);
+
+    DItem<T> *ref = from_head ? head : tail;
     int i = 0;
     while (ref != nullptr && i < len) {
-      if (i == index) {
+      if (i == *new_index) {
         break;
       } else {
-        ref = ref->next;
+        ref = from_head ? ref->next : ref->prev; // rethink
         i++;
       }
     }
@@ -243,19 +261,29 @@ public:
   void insert_item_at(int index, DItem<T> *item) {
     if (head == nullptr) {
       head = tail = item;
-    } else if (index >= this->size()) {
-      tail->next = item;
-      item->prev = tail;
-      tail = item;
     } else {
-      DItem<T> **target = &head;
-      for (int i = 0; (*target != nullptr) && i < index; i++) {
-        target = &((*target)->next);
+      int *new_index;
+      bool from_head = decide_dir(index, new_index);
+
+      DItem<T> **target = &(from_head ? head : tail);
+      for (int i = 0; i < *new_index; i++) {
+        DItem<T> *crnt = *target;
+        if (crnt != nullptr) {
+          target = &(from_head ? crnt->next : crnt->prev);
+        } else {
+          break;
+        }
       }
       if (*target != nullptr) {
-        item->next = *target;
-        item->prev = (*target)->prev;
-        (*target)->prev = item;
+        if (from_head) {
+          item->next = *target;
+          item->prev = (*target)->prev;
+          (*target)->prev = item;
+        } else {
+          /* item->prev = *target; */
+          /* item->next = (*target)->next; */
+          /* (*target)->next = item; */
+        }
       }
       *target = item;
     }
@@ -264,11 +292,8 @@ public:
   DItem<T> *remove_item_from(int index) {
     if (head == nullptr) {
       return nullptr;
-    } else if (index == 0) {
-      DItem<T> *old = head;
-      head = old->next;
-      return old;
     } else {
+
       DItem<T> **target = &head;
       for (int i = 0; (*target != nullptr) && i < index; i++) {
         target = &((*target)->next);
