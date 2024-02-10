@@ -225,13 +225,18 @@ template <class T> struct DItem {
 
 template <class T> class DLList : public LinkedList<T, DItem<T>> {
 
+  // to reduce traversal by choosing the closest end.
+  // ie. if index is closer to tail, we can start traversing from
+  // that side, and vice-versa.
   bool decide_dir(int index, int *new_index) {
     int len = this->size();
-    int inv_index = len - index; // rethink
+    int inv_index = len - index;
 
     // priortize head side
     bool from_head = index <= inv_index;
 
+    // not exactly new new index, but the choosing the closest
+    // index.
     *new_index = from_head ? index : inv_index;
 
     return from_head;
@@ -243,13 +248,13 @@ public:
 
   DItem<T> *item_at(int index) {
     int len = this->size();
-    int *new_index;
-    bool from_head = decide_dir(index, new_index);
+    int new_index;
+    bool from_head = decide_dir(index, &new_index);
 
     DItem<T> *ref = from_head ? head : tail;
     int i = 0;
     while (ref != nullptr && i < len) {
-      if (i == *new_index) {
+      if (i == new_index) {
         break;
       } else {
         ref = from_head ? ref->next : ref->prev; // rethink
@@ -295,16 +300,32 @@ public:
     if (head == nullptr) {
       return nullptr;
     } else {
+      int new_index;
+      bool from_head = decide_dir(index, &new_index);
 
-      DItem<T> **target = &head;
-      for (int i = 0; (*target != nullptr) && i < index; i++) {
-        target = &((*target)->next);
+      DItem<T> **target = &(from_head ? head : tail);
+      for (int i = 0; i < new_index; i++) {
+        DItem<T> *crnt = *target;
+        if (crnt != nullptr) {
+          target = &(from_head ? crnt->next : crnt->prev);
+        } else {
+          break;
+        }
       }
 
       DItem<T> *crnt = *target;
+
       if (crnt != nullptr) {
-        *target = crnt->next;
+        DItem<T> *prev = crnt->prev;
+        DItem<T> *next = crnt->next;
+        if (prev != nullptr) {
+          prev->next = next;
+        }
+        if (next != nullptr) {
+          next->prev = prev;
+        }
       }
+
       return crnt;
     }
   }
