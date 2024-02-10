@@ -227,9 +227,10 @@ template <class T> class DLList : public LinkedList<T, DItem<T>> {
 
   bool decide_dir(int index, int *new_index) {
     int len = this->size();
-    int inv_index = len - index - 1;
+    int inv_index = len - index; // rethink
 
-    bool from_head = index < inv_index;
+    // priortize head side
+    bool from_head = index <= inv_index;
 
     *new_index = from_head ? index : inv_index;
 
@@ -262,13 +263,14 @@ public:
     if (head == nullptr) {
       head = tail = item;
     } else {
-      int *new_index;
-      bool from_head = decide_dir(index, new_index);
+      int new_index;
+      bool from_head = decide_dir(index, &new_index);
 
       DItem<T> **target = &(from_head ? head : tail);
-      for (int i = 0; i < *new_index; i++) {
+      for (int i = 0; i < new_index; i++) {
         DItem<T> *crnt = *target;
         if (crnt != nullptr) {
+          // reconsider this, it might be overhead :)
           target = &(from_head ? crnt->next : crnt->prev);
         } else {
           break;
@@ -280,9 +282,9 @@ public:
           item->prev = (*target)->prev;
           (*target)->prev = item;
         } else {
-          /* item->prev = *target; */
-          /* item->next = (*target)->next; */
-          /* (*target)->next = item; */
+          item->prev = *target;
+          item->next = (*target)->next;
+          (*target)->next = item;
         }
       }
       *target = item;
