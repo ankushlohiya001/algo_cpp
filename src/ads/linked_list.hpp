@@ -230,7 +230,7 @@ template <class T> class DLList : public LinkedList<T, DItem<T>> {
   // that side, and vice-versa.
   bool decide_dir(int index, int *new_index) {
     int len = this->size();
-    int inv_index = len - index;
+    int inv_index = len - index - 1;
 
     // priortize head side
     bool from_head = index <= inv_index;
@@ -324,6 +324,7 @@ public:
         if (next != nullptr) {
           next->prev = prev;
         }
+        *target = from_head ? next : prev;
       }
 
       return crnt;
