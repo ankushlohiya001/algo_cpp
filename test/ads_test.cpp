@@ -22,12 +22,16 @@ int main() {
   /* } */
   /* std::cout << ls->tail->data << std::endl; */
 
-  /* std::cout << sl->front() << std::endl; */
-  /* std::cout << sl->back() << std::endl; */
+  std::cout << sl->front() << std::endl;
+  std::cout << sl->back() << std::endl;
 
-  while (!sl->is_empty()) {
-    std::cout << sl->remove_front() << "->";
-  }
+  /* for (int i = 0; i < sl->size(); i++) { */
+  /*   std::cout << ls->item_at(i)->get_data() << ", "; */
+  /* } */
+
+  /* while (!sl->is_empty()) { */
+  /*   std::cout << sl->remove_front() << "->"; */
+  /* } */
   /* std::cout << "nullptr\n"; */
   std::cout << "\n-----------------" << std::endl;
   return 0;
