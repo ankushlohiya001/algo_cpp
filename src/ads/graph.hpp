@@ -42,7 +42,29 @@ public:
     return !!matrix[index];
   }
 
+  bool add_edge_directed(V from, V to, int weight) {
+    int index = get_edge_index(from, to);
+    if (!is_edge(from, to)) {
+      matrix[index] = weight;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   bool add_edge_directed(V from, V to) {
+    return add_edge_directed(from, to, 1);
+  }
+
+  bool add_edge(V vert_a, V vert_b, int weight) {
+    bool res = add_edge_directed(vert_a, vert_b, weight);
+    bool res2 = add_edge_directed(vert_b, vert_a, weight);
+    return res && res2;
+  }
+
+  bool add_edge(V vert_a, V vert_b) { return add_edge(vert_a, vert_b, 1); }
+
+  bool remove_edge_directed(V from, V to) {
     if (!is_edge(from, to)) {
       int index = get_edge_index(from, to);
       matrix[index] = 1;
@@ -52,17 +74,9 @@ public:
     }
   }
 
-  bool add_edge(V vert_a, V vert_b) {
-    bool res = add_edge_directed(vert_a, vert_b);
-  }
-
   bool remove_edge(V vert_a, V vert_b) {
-    if (!is_edge(vert_a, vert_b)) {
-      int index = get_edge_index(vert_a, vert_b);
-      matrix[index] = 1;
-      return true;
-    } else {
-      return false;
-    }
+    bool res = remove_edge_directed(vert_a, vert_b);
+    bool res2 = remove_edge_directed(vert_b, vert_a);
+    return res && res2;
   }
 };
