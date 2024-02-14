@@ -103,4 +103,23 @@ public:
     }
     *path = road;
   }
+
+  void bfs(V init, Queue<V> *path) {
+    Queue<V> road;
+    Queue<int> book;
+    book.enque(vertices->at(init)); // vertex's index
+    while (!book.is_empty()) {
+      int crnt = book.deque();
+      for (int i = 0; i < vert_count; i++) {
+        if (i == crnt)
+          continue;
+        int index = rc_to_ind(crnt, i, vert_count);
+        if (matrix[index] != 0) {
+          book.enque(i);
+        }
+      }
+      road.enque(vert_names[crnt]);
+    }
+    *path = road;
+  }
 };
