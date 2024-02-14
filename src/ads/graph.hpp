@@ -122,4 +122,11 @@ public:
     }
     *path = road;
   }
+
+  // dijkstra's algo for finding shortest path between
+  // two vertices. it finds optimal path
+  void dijkstra_path(V from, V to, Queue<V> *path);
+
+  // a* algo for path finding between two vertices.
+  void astar_path(V from, V to, Queue<V> *path);
 };
