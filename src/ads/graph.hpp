@@ -85,6 +85,7 @@ public:
     return res && res2;
   }
 
+  // visits node to dead end, then visit next child.
   void dfs(V init, Queue<V> *path) {
     Queue<V> road;
     Stack<int> book;
@@ -104,6 +105,7 @@ public:
     *path = road;
   }
 
+  // visits all childs, then visits thier childs and so on...
   void bfs(V init, Queue<V> *path) {
     Queue<V> road;
     Queue<int> book;
