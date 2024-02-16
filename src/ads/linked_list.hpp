@@ -340,28 +340,14 @@ public:
  * here's item contains:
  *  data,
  *  reference to next element only,
- *
- * better( O(1) ) for following:
- *  insert_front,
- *  insert_back,
- *  remove_front
  * */
-
 template <class T> class CLList : public LinkedList<T, SItem<T>> {
 public:
   SItem<T> *head;
 
-  // havin' tail reference makes insertion at back fast, ie. O(1)
-  // else we would need to travel upto tail item.
-  SItem<T> *tail;
-
   SItem<T> *item_at(int index) {
     int len = this->size();
-    if (index == len - 1) {
-      // since we've last element/ tail reference,
-      // no need to travel
-      return tail;
-    }
+
     SItem<T> *ref = head;
     int i = 0;
     while (ref != nullptr && i < len) {
@@ -379,14 +365,8 @@ public:
     if (head == nullptr) {
       // case where LinkedList is completely empty.
       // so,
-      head = tail = item;
-    } else if (index >= this->size()) {
-      // TODOs
-      // need to reconsider whether panic or let it as is. :)
-      //  appending to last in case of element is larger than
-      //  length of list.
-      tail->next = item;
-      tail = item;
+      head = item;
+      head->next = head;
     } else {
       // traversing to targetted index,
       SItem<T> **target = &head;
@@ -426,5 +406,5 @@ public:
   }
 
 public:
-  CLList() : head(nullptr), tail(nullptr) {}
+  CLList() : head(nullptr) {}
 };
