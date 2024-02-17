@@ -1,6 +1,8 @@
 build
 .cache
 Testing
+# local test dir for manual testing :)
+test
 
 ## c++ related stuffs
 # Prerequisites
