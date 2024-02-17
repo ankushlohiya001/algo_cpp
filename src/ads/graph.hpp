@@ -1,7 +1,17 @@
 #pragma once
 #include "queue.hpp"
 #include "stack.hpp"
+#include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
+
+template <class T> T min(T a, T b) { return a < b ? a : b; }
+
+template <class T> void fill(T *arr, int length, T val) {
+  for (int i = 0; i < length; i++) {
+    arr[i] = val;
+  }
+}
 
 int rc_to_ind(int row, int col, int cols) { return row * cols + col; }
 
@@ -127,7 +137,38 @@ public:
 
   // dijkstra's algo for finding shortest path between
   // two vertices. it finds optimal path
-  void dijkstra_path(V from, V to, Queue<V> *path);
+  void dijkstra_path(V from, V to, Queue<V> *path) {
+    // don't know, but works :))
+    int *weights = new int[vert_count];
+    fill(weights, vert_count, 99999999);
+
+    std::unordered_map<int, bool> visited;
+    path->enque(from);
+
+    int crnt = from;
+    int cost = 0;
+    while (crnt != -1) {
+      int crnt_min_cost = 99999999;
+      int next = -1;
+      visited.insert_or_assign(crnt, 1);
+      for (int i = 0; i < vert_count; i++) {
+        if (visited.count(i) > 0)
+          continue;
+        if (is_edge(crnt, i)) {
+          int i_cost = cost + rc_to_ind(crnt, i, vert_count);
+          int crnt_cost = min(weights[i], i_cost);
+          if (crnt_cost < crnt_min_cost && weights[i] != crnt_cost) {
+            crnt_min_cost = crnt_cost;
+            next = i;
+            path->enque(vert_names[i]);
+          }
+          weights[i] = crnt_cost;
+        }
+      }
+      crnt = next;
+      cost += crnt_min_cost;
+    }
+  }
 
   // a* algo for path finding between two vertices.
   void astar_path(V from, V to, Queue<V> *path);
