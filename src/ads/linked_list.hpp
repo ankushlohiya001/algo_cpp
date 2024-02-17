@@ -346,11 +346,15 @@ public:
   SItem<T> *head;
 
   SItem<T> *item_at(int index) {
+    if (head == nullptr) {
+      return nullptr;
+    }
+
     int len = this->size();
 
     SItem<T> *ref = head;
     int i = 0;
-    while (ref != nullptr && i < len) {
+    while (i < len) {
       if (i == index) {
         break;
       } else {
@@ -366,18 +370,26 @@ public:
       // case where LinkedList is completely empty.
       // so,
       head = item;
+      // last element having reference to head
       head->next = head;
     } else {
       // traversing to targetted index,
       SItem<T> **target = &head;
-      for (int i = 0; (*target != nullptr) && i < index; i++) {
+      for (int i = 0; i < index; i++) {
         target = &((*target)->next);
       }
 
-      if (*target != nullptr) {
-        // case when it need to insert at non last index.
-        item->next = *target;
+      if (index == 0) {
+        // if we're inserting at front, then we need to add its' reference
+        // to last element so, as to make correct Circular chain
+        SItem<T> *mover = head;
+        while (mover->next != head) {
+          mover = mover->next;
+        }
+        mover->next = item;
       }
+
+      item->next = *target;
       *target = item;
     }
   }
@@ -386,21 +398,24 @@ public:
     if (head == nullptr) {
       // ignoring removing from empty
       return nullptr;
-    } else if (index == 0) {
-      // incase of head removal
-      SItem<T> *old = head;
-      head = old->next;
-      return old;
     } else {
       SItem<T> **target = &head;
-      for (int i = 0; (*target != nullptr) && i < index; i++) {
+      for (int i = 0; i < index; i++) {
         target = &((*target)->next);
       }
 
-      SItem<T> *crnt = *target;
-      if (crnt != nullptr) {
-        *target = crnt->next;
+      if (index == 0) {
+        // if we're removing from front, then we need to remove its' reference
+        // to last element and add new' ones reference.
+        SItem<T> *mover = head;
+        while (mover->next != head) {
+          mover = mover->next;
+        }
+        mover->next = head->next;
       }
+
+      SItem<T> *crnt = *target;
+      *target = crnt->next;
       return crnt;
     }
   }
