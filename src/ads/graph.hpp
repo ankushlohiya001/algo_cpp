@@ -2,8 +2,8 @@
 #include "queue.hpp"
 #include "stack.hpp"
 #include <algorithm>
+#include <iostream>
 #include <unordered_map>
-#include <unordered_set>
 
 template <class T> T min(T a, T b) { return a < b ? a : b; }
 
@@ -53,8 +53,13 @@ public:
   }
 
   bool is_edge(V from, V to) {
+    int cost = edge_cost(from, to);
+    return !!cost;
+  }
+
+  int edge_cost(V from, V to) {
     int index = get_edge_index(from, to);
-    return !!matrix[index];
+    return matrix[index];
   }
 
   bool add_edge_directed(V from, V to, int weight) {
@@ -98,39 +103,39 @@ public:
   // visits node to dead end, then visit next child.
   void dfs(V init, Queue<V> *path) {
     Queue<V> road;
-    Stack<int> book;
-    book.push(vertices->at(init)); // vertex's index
+    std::unordered_map<V, bool> visited;
+    Stack<V> book;
+    book.push(init); // vertex's index
     while (!book.is_empty()) {
-      int crnt = book.pop();
+      V crnt = book.pop();
+      visited.insert_or_assign(crnt, 0);
       for (int i = 0; i < vert_count; i++) {
-        if (i == crnt)
-          continue;
-        int index = rc_to_ind(crnt, i, vert_count);
-        if (matrix[index] != 0) {
-          book.push(i);
+        V to = vert_names[i];
+        if (crnt != to && visited.count(to) == 0 && is_edge(crnt, to)) {
+          book.push(to);
         }
       }
-      road.enque(vert_names[crnt]);
+      road.enque(crnt);
     }
     *path = road;
   }
 
-  // visits all childs, then visits thier childs and so on...
+  // visits node to dead end, then visit next child.
   void bfs(V init, Queue<V> *path) {
     Queue<V> road;
-    Queue<int> book;
-    book.enque(vertices->at(init)); // vertex's index
+    std::unordered_map<V, bool> visited;
+    Queue<V> book;
+    book.enque(init); // vertex's index
     while (!book.is_empty()) {
-      int crnt = book.deque();
+      V crnt = book.deque();
+      visited.insert_or_assign(crnt, 0);
       for (int i = 0; i < vert_count; i++) {
-        if (i == crnt)
-          continue;
-        int index = rc_to_ind(crnt, i, vert_count);
-        if (matrix[index] != 0) {
-          book.enque(i);
+        V to = vert_names[i];
+        if (crnt != to && visited.count(to) == 0 && is_edge(crnt, to)) {
+          book.enque(to);
         }
       }
-      road.enque(vert_names[crnt]);
+      road.enque(crnt);
     }
     *path = road;
   }
@@ -138,17 +143,18 @@ public:
   // dijkstra's algo for finding shortest path between
   // two vertices. it finds optimal path
   void dijkstra_path(V from, V to, Queue<V> *path) {
+    int INF = 100000000;
     // don't know, but works :))
     int *weights = new int[vert_count];
-    fill(weights, vert_count, 99999999);
+    fill(weights, vert_count, INF);
 
-    std::unordered_map<int, bool> visited;
+    std::unordered_map<V, bool> visited;
     path->enque(from);
 
     int crnt = from;
     int cost = 0;
     while (crnt != -1) {
-      int crnt_min_cost = 99999999;
+      int crnt_min_cost = INF;
       int next = -1;
       visited.insert_or_assign(crnt, 1);
       for (int i = 0; i < vert_count; i++) {
