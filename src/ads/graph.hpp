@@ -1,11 +1,11 @@
 #pragma once
+#include "linked_list.hpp"
 #include "queue.hpp"
 #include "stack.hpp"
-#include <algorithm>
-#include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 
-template <class T> T min(T a, T b) { return a < b ? a : b; }
+template <class T> inline T min(T a, T b) { return a < b ? a : b; }
 
 template <class T> void fill(T *arr, int length, T val) {
   for (int i = 0; i < length; i++) {
@@ -27,10 +27,14 @@ template <class V = int> class Graph {
   V *vert_names;
 
   int get_edge_index(V vert_a, V vert_b) {
-    int row = vertices->at(vert_a);
-    int col = vertices->at(vert_b);
+    int row = get_vertex_index(vert_a);
+    int col = get_vertex_index(vert_b);
     return rc_to_ind(row, col, vert_count);
   }
+
+  inline int get_vertex_index(V vert) { return vertices->at(vert); }
+
+  inline V vertex_at(int index) { return vert_names[index]; }
 
 public:
   Graph(int v_c)
@@ -60,6 +64,20 @@ public:
   int edge_cost(V from, V to) {
     int index = get_edge_index(from, to);
     return matrix[index];
+  }
+
+  int vertex_connections(V from, Queue<V> *connections) {
+    int count = 0;
+
+    for (int i = 0; i < vert_count; i++) {
+      V to = vertex_at(i);
+      if (is_edge(from, to)) {
+        connections->enque(to);
+        count++;
+      }
+    }
+
+    return count;
   }
 
   bool add_edge_directed(V from, V to, int weight) {
@@ -103,38 +121,52 @@ public:
   // visits node to dead end, then visit next child.
   void dfs(V init, Queue<V> *path) {
     Queue<V> road;
-    std::unordered_map<V, bool> visited;
+    std::unordered_set<V> visited;
     Stack<V> book;
     book.push(init); // vertex's index
     while (!book.is_empty()) {
       V crnt = book.pop();
-      visited.insert_or_assign(crnt, 0);
-      for (int i = 0; i < vert_count; i++) {
-        V to = vert_names[i];
-        if (crnt != to && visited.count(to) == 0 && is_edge(crnt, to)) {
-          book.push(to);
+      if (visited.count(crnt) > 0) {
+        continue;
+      }
+      visited.insert(crnt);
+
+      Queue<V> connections;
+      vertex_connections(crnt, &connections);
+      while (!connections.is_empty()) {
+        V vertex = connections.deque();
+        if (visited.count(vertex) == 0) {
+          book.push(vertex);
         }
       }
+
       road.enque(crnt);
     }
     *path = road;
   }
 
-  // visits node to dead end, then visit next child.
+  // visits node's every child, then visit grand child and so on.
   void bfs(V init, Queue<V> *path) {
     Queue<V> road;
-    std::unordered_map<V, bool> visited;
+    std::unordered_set<V> visited;
     Queue<V> book;
     book.enque(init); // vertex's index
     while (!book.is_empty()) {
       V crnt = book.deque();
-      visited.insert_or_assign(crnt, 0);
-      for (int i = 0; i < vert_count; i++) {
-        V to = vert_names[i];
-        if (crnt != to && visited.count(to) == 0 && is_edge(crnt, to)) {
-          book.enque(to);
+      if (visited.count(crnt) > 0) {
+        continue;
+      }
+      visited.insert(crnt);
+
+      Queue<V> connections;
+      vertex_connections(crnt, &connections);
+      while (!connections.is_empty()) {
+        V vertex = connections.deque();
+        if (visited.count(vertex) == 0) {
+          book.enque(vertex);
         }
       }
+
       road.enque(crnt);
     }
     *path = road;
