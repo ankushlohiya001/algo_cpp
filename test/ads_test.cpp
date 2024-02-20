@@ -24,11 +24,13 @@ int main() {
 
   Queue<char> path;
 
-  graph.bfs('h', &path);
+  int cost = graph.dijkstra_path('h', 's', &path);
 
   while (!path.is_empty()) {
-    std::cout << path.deque() << ", ";
+    std::cout << path.deque() << "-> ";
   }
+
+  std::cout << "\n" << cost;
 
   std::cout << "\n-----------------" << std::endl;
   return 0;

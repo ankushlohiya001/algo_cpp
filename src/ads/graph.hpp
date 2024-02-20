@@ -2,6 +2,7 @@
 #include "linked_list.hpp"
 #include "queue.hpp"
 #include "stack.hpp"
+#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -174,38 +175,45 @@ public:
 
   // dijkstra's algo for finding shortest path between
   // two vertices. it finds optimal path
-  void dijkstra_path(V from, V to, Queue<V> *path) {
+  int dijkstra_path(V from, V to, Queue<V> *path) {
     int INF = 100000000;
     // don't know, but works :))
     int *weights = new int[vert_count];
     fill(weights, vert_count, INF);
 
-    std::unordered_map<V, bool> visited;
-    path->enque(from);
+    std::unordered_set<V> visited;
 
-    int crnt = from;
+    V crnt = from;
     int cost = 0;
-    while (crnt != -1) {
+    while (crnt != to) {
+      path->enque(crnt);
+
       int crnt_min_cost = INF;
-      int next = -1;
-      visited.insert_or_assign(crnt, 1);
-      for (int i = 0; i < vert_count; i++) {
-        if (visited.count(i) > 0)
-          continue;
-        if (is_edge(crnt, i)) {
-          int i_cost = cost + rc_to_ind(crnt, i, vert_count);
-          int crnt_cost = min(weights[i], i_cost);
-          if (crnt_cost < crnt_min_cost && weights[i] != crnt_cost) {
-            crnt_min_cost = crnt_cost;
-            next = i;
-            path->enque(vert_names[i]);
+      V next;
+      visited.insert(crnt);
+      Queue<V> connections;
+      vertex_connections(crnt, &connections);
+
+      while (!connections.is_empty()) {
+        V conn = connections.deque();
+        int conn_cost = cost + edge_cost(crnt, conn);
+        int old_weight = weights[get_vertex_index(conn)];
+        if (conn_cost < old_weight) {
+          weights[get_vertex_index(conn)] = conn_cost;
+
+          if (conn_cost < crnt_min_cost) {
+            crnt_min_cost = conn_cost;
+            next = conn;
           }
-          weights[i] = crnt_cost;
         }
       }
+
       crnt = next;
       cost += crnt_min_cost;
     }
+    path->enque(to);
+
+    return weights[get_vertex_index(to)];
   }
 
   // a* algo for path finding between two vertices.
