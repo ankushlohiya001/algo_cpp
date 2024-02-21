@@ -181,37 +181,42 @@ public:
     int *weights = new int[vert_count];
     fill(weights, vert_count, INF);
 
-    std::unordered_set<V> visited;
+    std::unordered_set<V> unvisited;
+    for (int i = 0; i < vert_count; i++) {
+      V vertex = vert_names[i];
+      unvisited.insert(vertex);
+    }
 
     V crnt = from;
-    int cost = 0;
-    while (crnt != to) {
-      path->enque(crnt);
+    int last_min_cost = 0;
+    while (!unvisited.empty()) {
 
-      int crnt_min_cost = INF;
-      V next;
-      visited.insert(crnt);
+      unvisited.erase(crnt);
       Queue<V> connections;
       vertex_connections(crnt, &connections);
 
       while (!connections.is_empty()) {
         V conn = connections.deque();
-        int conn_cost = cost + edge_cost(crnt, conn);
-        int old_weight = weights[get_vertex_index(conn)];
-        if (conn_cost < old_weight) {
-          weights[get_vertex_index(conn)] = conn_cost;
+        int vert_ind = get_vertex_index(conn);
+        int conn_cost = last_min_cost + edge_cost(crnt, conn);
 
-          if (conn_cost < crnt_min_cost) {
-            crnt_min_cost = conn_cost;
-            next = conn;
-          }
+        if (conn_cost < weights[vert_ind]) {
+          weights[vert_ind] = conn_cost;
         }
       }
 
-      crnt = next;
-      cost += crnt_min_cost;
+      int crnt_min_cost = INF;
+      for (auto vert_ref = unvisited.begin(); vert_ref != unvisited.end();) {
+        V vert = *vert_ref;
+        int index = get_vertex_index(vert);
+        if (weights[index] >= last_min_cost && weights[index] < crnt_min_cost) {
+          crnt_min_cost = weights[index];
+          crnt = vert;
+        }
+        vert_ref++;
+      }
+      last_min_cost = crnt_min_cost;
     }
-    path->enque(to);
 
     return weights[get_vertex_index(to)];
   }
