@@ -189,7 +189,7 @@ public:
 
     V crnt = from;
     int last_min_cost = 0;
-    while (!unvisited.empty()) {
+    while (unvisited.size() > 1) {
 
       unvisited.erase(crnt);
       Queue<V> connections;

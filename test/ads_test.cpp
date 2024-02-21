@@ -24,7 +24,7 @@ int main() {
 
   Queue<char> path;
 
-  int cost = graph.dijkstra_path('h', 'e', &path);
+  int cost = graph.dijkstra_path('h', 's', &path);
 
   while (!path.is_empty()) {
     std::cout << path.deque() << "-> ";
