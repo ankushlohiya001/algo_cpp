@@ -1,8 +1,6 @@
 #pragma once
-#include "linked_list.hpp"
 #include "queue.hpp"
 #include "stack.hpp"
-#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -174,7 +172,7 @@ public:
   }
 
   // dijkstra's algo for finding shortest path between
-  // two vertices. it finds optimal path
+  // two vertices. it finds best(shortest) path
   int dijkstra_path(V from, V to, Stack<V> *path) {
     int INF = 100000000;
     // don't know, but works :))
@@ -235,5 +233,7 @@ public:
   }
 
   // a* algo for path finding between two vertices.
+  // works for uniform grid based graph..
+  // so might not implement for now.
   void astar_path(V from, V to, Queue<V> *path);
 };
