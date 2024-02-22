@@ -175,11 +175,13 @@ public:
 
   // dijkstra's algo for finding shortest path between
   // two vertices. it finds optimal path
-  int dijkstra_path(V from, V to, Queue<V> *path) {
+  int dijkstra_path(V from, V to, Stack<V> *path) {
     int INF = 100000000;
     // don't know, but works :))
     int *weights = new int[vert_count];
     fill(weights, vert_count, INF);
+
+    int *short_from = new int[vert_count]; // who come from
 
     std::unordered_set<V> unvisited;
     for (int i = 0; i < vert_count; i++) {
@@ -202,6 +204,8 @@ public:
 
         if (conn_cost < weights[vert_ind]) {
           weights[vert_ind] = conn_cost;
+
+          short_from[vert_ind] = get_vertex_index(crnt);
         }
       }
 
@@ -216,6 +220,15 @@ public:
         vert_ref++;
       }
       last_min_cost = crnt_min_cost;
+    }
+
+    path->push(to);
+
+    V ptr_at = to;
+    while (ptr_at != from) {
+      int vert_idx = get_vertex_index(ptr_at);
+      ptr_at = vertex_at(short_from[vert_idx]);
+      path->push(ptr_at);
     }
 
     return weights[get_vertex_index(to)];

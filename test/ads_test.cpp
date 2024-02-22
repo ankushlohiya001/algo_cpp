@@ -22,12 +22,12 @@ int main() {
   graph.add_edge('e', 's', 4);
   graph.add_edge('f', 's', 2);
 
-  Queue<char> path;
+  Stack<char> path;
 
-  int cost = graph.dijkstra_path('h', 's', &path);
+  int cost = graph.dijkstra_path('h', 'd', &path);
 
   while (!path.is_empty()) {
-    std::cout << path.deque() << "-> ";
+    std::cout << path.pop() << "-> ";
   }
 
   std::cout << "\n" << cost;
