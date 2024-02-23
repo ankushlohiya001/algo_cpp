@@ -1,10 +1,15 @@
 #pragma once
 #include <string>
-#include <unordered_map>
+
+const int SYMBOL_CAP = 256;
 
 struct Node {
-  std::unordered_map<char, Node *> *next;
-  Node() : next(new std::unordered_map<char, Node *>()) {}
+  Node *connections[SYMBOL_CAP]; // Node *
+  Node() {
+    for (int i = 0; i < SYMBOL_CAP; i++) {
+      connections[i] = nullptr;
+    }
+  }
 };
 
 // trie data structure useful for string matching,
@@ -19,22 +24,22 @@ public:
   void insert(std::string word) {
     Node *crnt = &root;
     for (auto chr : word) {
-      auto ct = crnt->next;
-      if (ct->count(chr) == 0) {
-        ct->insert_or_assign(chr, new Node());
+      auto conns = crnt->connections;
+      if (!conns[chr]) {
+        conns[chr] = new Node();
       }
-      crnt = ct->at(chr);
+      crnt = conns[chr];
     }
   }
 
   bool search(std::string word) {
     Node *crnt = &root;
     for (auto chr : word) {
-      auto ct = crnt->next;
-      if (ct->count(chr) == 0) {
+      auto conns = crnt->connections;
+      if (!conns[chr]) {
         return false;
       } else {
-        crnt = ct->at(chr);
+        crnt = conns[chr];
       }
     }
     return true;
