@@ -3,8 +3,8 @@
 #include <unordered_map>
 
 struct Node {
-  std::unordered_map<char, Node> *next;
-  Node() : next(new std::unordered_map<char, Node>()) {}
+  std::unordered_map<char, Node *> *next;
+  Node() : next(new std::unordered_map<char, Node *>()) {}
 };
 
 // trie data structure useful for string matching,
@@ -21,10 +21,9 @@ public:
     for (auto chr : word) {
       auto ct = crnt->next;
       if (ct->count(chr) == 0) {
-        ct->insert_or_assign(chr, Node());
-      } else {
-        crnt = &ct->at(chr);
+        ct->insert_or_assign(chr, new Node());
       }
+      crnt = ct->at(chr);
     }
   }
 
@@ -35,7 +34,7 @@ public:
       if (ct->count(chr) == 0) {
         return false;
       } else {
-        crnt = &ct->at(chr);
+        crnt = ct->at(chr);
       }
     }
     return true;
