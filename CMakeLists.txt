@@ -21,6 +21,7 @@ set(modules
   searching
   sorting
   smart_ptr
+  math
 )
 
 # our source code
