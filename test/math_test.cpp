@@ -3,8 +3,11 @@
 
 int main() {
   std::cout << "--------------------\n";
-  int val = hcf(16, 2390);
-  std::cout << val;
+
+  double *arr = new double[]{3, 5, 7, 1};
+
+  double mn = average(arr, 4);
+  std::cout << mn;
   std::cout << "\n--------------------\n";
   return 0;
 }
